@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 require("dotenv").config();
@@ -15,14 +15,16 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // Creating routes
 import authRouter from "./routes/auth";
+import userRouter from "./routes/user";
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
-// app.get("/:id", (request, response, next)=>{if(request.params.id=="1")next()
-//     else{
-//         return response.json("good");
-//     }
-// });
-// app.use((request, response)=>{return response.json("different");});
+
+// Error handling
+const errorHandler = (err: any, request: Request, response: Response, next: NextFunction)=>{
+    console.log("using error handler");
+    return response.status(500).json({err: err.message});
+}
 
 // Starting express server
 const PORT = process.env.PORT || 5000;
