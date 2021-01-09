@@ -5,6 +5,8 @@ export interface IUser extends Document{
     lastName: string;
     email: string;
     password: string;
+    profileImage: string;
+    phone: string;
 }
 
 export interface IUserModel extends mongoose.Model<IUser>{
@@ -16,6 +18,8 @@ const userSchema = new mongoose.Schema({
     lastName: {type: String, required:true},
     email: {type: String, required:true, match:/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, unique:true},
     password: {type: String, required:true}, // select:false was not working
+    profileImage: {type: String},
+    phone: {type: String},
 });
 
 userSchema.set('toJSON', {

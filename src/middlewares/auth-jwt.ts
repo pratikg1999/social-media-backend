@@ -13,6 +13,7 @@ const verifyToken = (request: Request, response: Response, next: NextFunction) =
         }
         else{
             response.locals.userId = (decoded as {id: string}).id;
+            request.userId = response.locals.userId;
             next();
         }
     })
