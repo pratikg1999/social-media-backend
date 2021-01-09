@@ -20,8 +20,10 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 // Creating routes
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
+import postRouter from "./routes/post";
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 
 
 // Error handling
