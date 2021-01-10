@@ -7,6 +7,8 @@ export interface IUser extends Document{
     password: string;
     profileImage: string;
     phone: string;
+    followings: IUser["_id"][];
+    bio: string;
 }
 
 export interface IUserModel extends mongoose.Model<IUser>{
@@ -20,6 +22,8 @@ const userSchema = new mongoose.Schema({
     password: {type: String, required:true}, // select:false was not working
     profileImage: {type: String},
     phone: {type: String},
+    followings: [{type:mongoose.Schema.Types.ObjectId, ref:"User"}],
+    bio: {type: String},
 });
 
 userSchema.set('toJSON', {

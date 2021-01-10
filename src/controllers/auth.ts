@@ -7,6 +7,7 @@ import UserModel from "../models/user";
 const postSignup = async (request: Request, response: Response)=>{
     try {
         let {firstName, lastName, email, password} : {firstName:string, lastName:string, email:string, password:string} = request.body;
+        let {bio}  = request.body;
         let user = await UserModel.findOne({email: email});
         // console.log("user is ", user);
         if(user !== null){
@@ -17,7 +18,8 @@ const postSignup = async (request: Request, response: Response)=>{
             email: email,
             firstName: firstName,
             lastName: lastName,
-            password: hashedPassword
+            password: hashedPassword,
+            bio:  bio,
         });
         await newUser.save();
         return response.json(newUser);
