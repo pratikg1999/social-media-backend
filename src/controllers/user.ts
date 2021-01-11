@@ -1,4 +1,5 @@
 import {NextFunction, Request, Response} from "express";
+import fs from "fs";
 import UserModel from "../models/user";
 const getInfo = async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -26,12 +27,17 @@ const getInfo = async (request: Request, response: Response, next: NextFunction)
 
 const updateInfo = async (request: Request, response: Response, next: NextFunction) => {
     try {
-        const userId: string = response.locals.userId;
+        const userId = request?.userId;
         delete request.body.email; // email can't be updated
-        if(request.file != null){
+        if(request.file){
             console.log("file found");
             request.body.profileImage = request.file.path;
         }
+        // let oldUser = await UserModel.findById(userId);
+        // if(oldUser!==null && oldUser?.profileImage){
+        //     fs.unlink(oldUser.profileImage, ()=>{});
+        // }
+        // no need to delete profile photo as it is already overiden and updated
         let updatedUser = await UserModel.findOneAndUpdate({_id: userId}, {...request.body}, {new: true});
         return response.json(updatedUser);
     }

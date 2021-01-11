@@ -22,4 +22,9 @@ router.route("/likes")
     .put(checkBodyParams(...controller.putLikeParams), controller.putLike)
     .delete(checkBodyParams(...controller.deleteLikeParams), controller.deleteLike);
 
+router.route("/:postId")
+    .all(authJwt.verifyToken)
+    .put(postImageUpload.single('image'), controller.putPost)
+    .delete(controller.deletePost);
+
 export default router;

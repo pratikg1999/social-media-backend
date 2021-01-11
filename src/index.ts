@@ -9,13 +9,14 @@ require("dotenv").config();
 console.log(path.join(__dirname, "..", "public"));
 let app = express();
 // app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(cors({}));
 app.use('/public', express.static(path.join(__dirname, "..", "public")));
 app.use(express.urlencoded({
     extended: true
 }))
 app.use(express.json());
 // app.use(multer().any());
-app.use(cors());
+
 
 //Connecting with mongoose
 mongoose.connect(process.env.MONGO_CON_STRING, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(() => { console.log("Mongoose connected") }).catch((err) => { throw err });

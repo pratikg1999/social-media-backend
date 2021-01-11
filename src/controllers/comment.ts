@@ -17,7 +17,8 @@ const createComment = async (request: Request, response: Response, next: NextFun
                 post: postId,
                 body: body,
             });
-            await comment.save();
+            comment = await comment.save();
+            comment = await comment.populate("createdBy").execPopulate();
             return response.json(comment);
         }
 
