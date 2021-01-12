@@ -10,7 +10,9 @@ console.log(path.join(__dirname, "..", "public"));
 let app = express();
 // app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(cors({}));
-app.use('/public', express.static(path.join(__dirname, "..", "public")));
+app.use('/public', express.static(path.join(__dirname, "..", "public"), {setHeaders: function (res, path, stat) {
+    res.set("Cache-Control", "no-store")
+  }}));
 app.use(express.urlencoded({
     extended: true
 }))
@@ -32,6 +34,12 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/comment", commentRouter);
+
+//handler for react build
+app.use(express.static(path.join(__dirname, "..", "react-build")));
+app.use("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "react-build", "index.html"));
+});
 
 
 // Error handling

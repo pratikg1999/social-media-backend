@@ -30,7 +30,7 @@ const updateInfo = async (request: Request, response: Response, next: NextFuncti
         const userId = request?.userId;
         delete request.body.email; // email can't be updated
         if(request.file){
-            console.log("file found");
+            console.log("file found", request.file.path);
             request.body.profileImage = request.file.path;
         }
         // let oldUser = await UserModel.findById(userId);

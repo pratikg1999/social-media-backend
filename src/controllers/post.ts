@@ -60,7 +60,7 @@ const deleteLikeParams = ["postId"];
 const deleteLike = async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { postId } = request.body;
-        const post = await PostModel.findOneAndUpdate({ _id: postId }, { $pull: { likes: request.userId } }, { new: true }).populate("likes");
+        const post = await PostModel.findOneAndUpdate({ _id: postId }, { $pull: { likes: {_id: request.userId} } }, { new: true }).populate("likes");
         if (post === null) {
             return response.status(404).json({ msg: `Post with id ${postId} doesn't exists` });
         }
