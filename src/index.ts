@@ -6,9 +6,7 @@ import multer from "multer";
 require("dotenv").config();
 
 //setting up express app
-console.log(path.join(__dirname, "..", "public"));
 let app = express();
-// app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(cors({}));
 app.use('/public', express.static(path.join(__dirname, "..", "public"), {setHeaders: function (res, path, stat) {
     res.set("Cache-Control", "no-store")
@@ -47,6 +45,7 @@ const errorHandler = (err: any, request: Request, response: Response, next: Next
     console.log("using error handler");
     return response.status(500).json({ err: err.message });
 }
+app.use(errorHandler);
 
 // Starting express server
 const PORT = process.env.PORT || 5000;

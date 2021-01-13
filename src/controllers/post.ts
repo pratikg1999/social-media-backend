@@ -60,7 +60,8 @@ const deleteLikeParams = ["postId"];
 const deleteLike = async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { postId } = request.body;
-        const post = await PostModel.findOneAndUpdate({ _id: postId }, { $pull: { likes: {_id: request.userId} } }, { new: true }).populate("likes");
+        const post = await PostModel.findOneAndUpdate({ _id: postId }, { $pull: { likes: request.userId as undefined } }, { new: true }).populate("likes");
+        // used "as undefined" to get rid of error
         if (post === null) {
             return response.status(404).json({ msg: `Post with id ${postId} doesn't exists` });
         }
@@ -75,15 +76,18 @@ const deleteLike = async (request: Request, response: Response, next: NextFuncti
 const deletePost = async (request: Request, response: Response, next: NextFunction) => {
     try {
         let post = await PostModel.findById(request.params.postId);
+        if (post === null) {
+            return response.status(404).json({ msg: `Post with id ${request.params.postId} doesn't exists` });
+        }
         if (post?.createdBy != request.userId) {
             return response.status(403).json({ msg: `Post with id ${request.params.postId} wan't created by you` });
         }
         if (post?.image) {
             fs.unlink(post?.image as string, () => { });
         }
-        let removedPost = await PostModel.remove({ _id: request.params.postId });
+        let res = await PostModel.remove({ _id: request.params.postId });
         await CommentModel.remove({ post: request.params.postId });
-        return response.json(removedPost);
+        return response.json(res);
     } catch (err) {
         next(err);
     }
@@ -92,6 +96,9 @@ const deletePost = async (request: Request, response: Response, next: NextFuncti
 const putPost = async (request: Request, response: Response, next: NextFunction) => {
     try {
         let post = await PostModel.findById(request.params.postId);
+        if (post === null) {
+            return response.status(404).json({ msg: `Post with id ${request.params.postId} doesn't exists` });
+        }
         if (post?.createdBy != request.userId) {
             return response.status(403).json({ msg: `Post with id ${request.params.postId} wan't created by you` });
         }
